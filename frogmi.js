@@ -7,6 +7,12 @@ class Store {
       status: 'solved',
     },
     {
+      openDate: '2012-01-26T13:45:50.417-07:00',
+      closeDate: '2012-01-26T15:47:50.417-07:00',
+      description: 'the floor in the fruit area is dirty',
+      status: 'solved',
+    },
+    {
       openDate: '2012-01-25T13:51:50.417-07:00',
       closeDate: '2012-01-26T15:51:50.417-07:00',
       description: 'the floor in the fruit area is dirty, like a looooot!',
@@ -52,7 +58,7 @@ class Store {
         item.status === 'open' &&
         item.openDate >= fromDate &&
         item.openDate <= toDate
-    ).length;
+    );
   }
 
   closedCases(fromDate, toDate) {
@@ -61,26 +67,38 @@ class Store {
         item.status === 'solved' &&
         item.openDate >= fromDate &&
         item.closeDate <= toDate
-    ).length;
+    );
   }
 
   averageSolution(fromDate, toDate) {
-    return 3;
+    const cases = this.closedCases(fromDate, toDate);
+    // console.log(cases);
+    const time = cases.reduce(
+      (sum, current) =>
+        sum + (new Date(current.closeDate) - new Date(current.openDate)),
+      0
+    );
+    return Math.floor(time / 1000 / 60 / cases.length);
   }
 
   maximumSolution(fromDate, toDate) {
-    return 3;
+    const cases = this.closedCases(fromDate, toDate);
+    // console.log(cases);
+    const time = cases.reduce(
+      (max, current) =>
+        max < new Date(current.closeDate) - new Date(current.openDate)
+          ? new Date(current.closeDate) - new Date(current.openDate)
+          : max,
+      0
+    );
+    return Math.floor(time / 1000 / 60 / cases.length);
   }
 
   incidentStatus(fromDate, toDate) {
     console.log(
-      `open_cases: ${this.openCases(
-        fromDate,
-        toDate
-      )}, closed_cases: ${this.closedCases(
-        fromDate,
-        toDate
-      )}, average_solution: ${this.averageSolution(
+      `open_cases: ${this.openCases(fromDate, toDate).length}, closed_cases: ${
+        this.closedCases(fromDate, toDate).length
+      }, average_solution: ${this.averageSolution(
         fromDate,
         toDate
       )}, maximum_solution: ${this.maximumSolution(fromDate, toDate)}`
@@ -88,20 +106,7 @@ class Store {
   }
 }
 
-const someStoreTestInit = (storeName) => {
-  // {
-  //   openDate: '2012-01-26T13:51:50.417-07:00',
-  //   closeDate: '2012-01-26T15:51:50.417-07:00',
-  //   description: 'the floor in the fruit area is dirty',
-  //   status: 'solved',
-  // },
-  // {
-  //   openDate: '2012-01-25T13:51:50.417-07:00',
-  //   closeDate: '2012-01-26T15:51:50.417-07:00',
-  //   description: 'the floor in the fruit area is dirty, like a looooot!',
-  //   status: 'open',
-  // },
-};
+const someStoreTestInit = (storeName) => {};
 
 const someStore = new Store('someStore');
 someStoreTestInit(someStore);
